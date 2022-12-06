@@ -1,1 +1,2 @@
-# project
+# Semester Project
+# This project represents the number of SFPD incident reports from 2018 in 3 different charts. These charts help keep track of the trend of the reports and compare them to every year. I created the charts by using Image Charts API and SFPD's JSON data source. I used the incident year and counted the incidents by year. This data is presented in bar chart and line chart. I calculated the percentage for each year and created a pie chart. 
