@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <style> .btn{border:1px solid black; padding:5px; display:inline-block} </style>
+</head>
+<body>
+	<div class="container">
+        <br>
+        <br>
+		<h3><center>SFPD Incident Reports: 2018 to Present</center></h3>
+        <br>
+        <br>
+        <p>The Police Department Incident Reports API from SF OpenData has the dataset that provides the incident reports filed from January 1, 2018. This dataset contains reports of the incidents filed by officers or self-reported by the general public using the SFPD’s online reporting system.</p>
+		<p>The below charts represent the reports per year. These can help in keeping track of the trend of incident reports. Click the buttons below to view the respective charts.</p>
+        <br>
+        <form>
+			<center><input type="button" value="Bar Chart" id="btn_1"></center>
+		</form>
+		<br><br><br>
+		<div id="output1"></div>
+		<br><br><br>
+		<form>
+			<center><input type="button" value="Line Chart" id="btn_2"></center>
+		</form>
+		<br><br><br>
+		<div id="output2"></div>
+		<br><br><br>
+		<form>
+			<center><input type="button" value="Pie Chart" id="btn_3"></center>
+		</form>
+		<br><br><br>
+		<div id="output3"></div>
+	</div>  
+</body>
+<script>
+"use strict";
+
+function police_districts(){
+    $.getJSON("https://data.sfgov.org/resource/wg3w-h783.json",function(result){
+        let answer = '';
+        for (let i = 0; i < result.length; i++){
+			answer = answer + "[" + result[i]["police_district"] + ", " + result[i]["incident_year"] + "]";
+		}
+		console.log(answer);
+    });
+}
+
+function chart1(){
+	$.getJSON("https://data.sfgov.org/resource/wg3w-h783.json",function(result){
+		console.log(result);
+		let newdata = [];
+		let count22 = 0;
+		let count21 = 0;
+		let count20 = 0;
+		let count19 = 0;
+		let count18 = 0;
+		for(let i=0;i < result.length;i++){
+			let item = []; 
+			item[0] = result[i]["incident_year"];  
+			item[1] = result[i]["police_district"];
+			newdata[i] = item;
+		};
+		console.log(newdata);
+		newdata.sort(function(pos1,pos2){return pos2[0] - pos1[0]});
+		for(let i=0; i < newdata.length; i++){
+			if (newdata[i][0] == "2022"){
+				count22 = count22 + 1;
+			} else if (newdata[i][0] == "2021"){
+			 	count21 = count21 + 1;
+			} else if (newdata[i][0] == "2020"){
+			 	count20 = count20 + 1;
+			}else if (newdata[i][0] == "2019"){
+			 	count19 = count19 + 1;
+			} else {
+				count18 = count18 + 1;
+			}
+		}
+		console.log(count22,count21,count20,count19,count18);
+		let total = count22 + count21 + count20 + count19 + count18;
+    	plotTheChart1(count22,count21,count20,count19,count18,total,newdata);
+	});
+}
+
+function plotTheChart1(count22,count21,count20,count19,count18,total,newdata){
+	let imageurl = "https://image-charts.com/chart?"
+	let count = "";
+	if (count22 > count21 && count22 > count20 && count22 > count19 && count22 > count18){
+		count = count22;
+	}else if (count21 > count22 && count21 > count20 && count21 > count19 && count21 > count18){
+		count = count21;
+	}else if (count20 > count22 && count20 > count21 && count20 > count19 && count20 > count18){
+		count = count20;
+	}else if (count19 > count22 && count19 > count21 && count19 > count20 && count19 > count18){
+		count = count19;
+	}else{
+		count = count18;
+	}
+	console.log(count);
+	imageurl = imageurl + "chco=FF8093|DEF3BD&"
+	imageurl = imageurl + "chd=t:" + count18 + "," + count19 + ","  + count20 + ","  + count21 + "," + count22 + "&"
+	imageurl = imageurl + "chds=0, " + count +  "&"
+	imageurl = imageurl + "chl=" + count18 + "|" + count19 + "|" + count20 + "|" + count21 + "|" + count22 + "&";
+	imageurl = imageurl + "chs=600x600&"
+	imageurl = imageurl + "cht=bvs&"
+	imageurl = imageurl + "chxl=1:|" + 2018 + "|" +  2019 + "|" +  2020 + "|" +  2021 + "|" +  2022 + "&"
+	imageurl = imageurl + "chxt=y,x";
+	console.log(imageurl);
+	$("#output1").html("<img src='" + imageurl + "'>"); 
+}
+
+function chart2(){
+	$.getJSON("https://data.sfgov.org/resource/wg3w-h783.json",function(result){
+		console.log(result);
+		let newdata = [];
+		let count22 = 0;
+		let count21 = 0;
+		let count20 = 0;
+		let count19 = 0;
+		let count18 = 0;
+		for(let i=0;i < result.length;i++){
+			let item = []; 
+			item[0] = result[i]["incident_year"];  
+			item[1] = result[i]["police_district"];
+			newdata[i] = item;
+		};
+		console.log(newdata);
+		newdata.sort(function(pos1,pos2){return pos2[0] - pos1[0]});
+		for(let i=0; i < newdata.length; i++){
+			if (newdata[i][0] == "2022"){
+				count22 = count22 + 1;
+			} else if (newdata[i][0] == "2021"){
+			 	count21 = count21 + 1;
+			} else if (newdata[i][0] == "2020"){
+			 	count20 = count20 + 1;
+			}else if (newdata[i][0] == "2019"){
+			 	count19 = count19 + 1;
+			} else {
+				count18 = count18 + 1;
+			}
+		}
+		console.log(count22,count21,count20,count19,count18);
+		let total = count22 + count21 + count20 + count19 + count18;
+    	plotTheChart2(count22,count21,count20,count19,count18,total,newdata);
+	});
+}
+
+function plotTheChart2(count22,count21,count20,count19,count18,total,newdata){
+	let imageurl = "https://image-charts.com/chart?"
+	let count = "";
+	if (count22 > count21 && count22 > count20 && count22 > count19 && count22 > count18){
+		count = count22;
+	}else if (count21 > count22 && count21 > count20 && count21 > count19 && count21 > count18){
+		count = count21;
+	}else if (count20 > count22 && count20 > count21 && count20 > count19 && count20 > count18){
+		count = count20;
+	}else if (count19 > count22 && count19 > count21 && count19 > count20 && count19 > count18){
+		count = count19;
+	}else{
+		count = count18;
+	}
+	console.log(count);
+	imageurl = imageurl + "chco=FF8093&"
+	imageurl = imageurl + "chd=t:" + count18 + "," + count19 + ","  + count20 + ","  + count21 + "," + count22 + "&"
+	imageurl = imageurl + "chds=0, " + count +  "&"
+	imageurl = imageurl + "chl=" + count18 + "|" + count19 + "|" + count20 + "|" + count21 + "|" + count22 + "&";
+	imageurl = imageurl + "chs=600x600&"
+	imageurl = imageurl + "cht=lc&"
+	imageurl = imageurl + "chxl=1:|" + 2018 + "|" +  2019 + "|" +  2020 + "|" +  2021 + "|" +  2022 + "&"
+	imageurl = imageurl + "chxt=y,x";
+	console.log(imageurl);
+	$("#output2").html("<img src='" + imageurl + "'>"); 
+}
+
+function chart3(){
+	$.getJSON("https://data.sfgov.org/resource/wg3w-h783.json",function(result){
+		console.log(result);
+		let newdata = [];
+		let count22 = 0;
+		let count21 = 0;
+		let count20 = 0;
+		let count19 = 0;
+		let count18 = 0;
+		for(let i=0;i < result.length;i++){
+			let item = []; 
+			item[0] = result[i]["incident_year"];  
+			item[1] = result[i]["police_district"];
+			newdata[i] = item;
+		};
+		console.log(newdata);
+		newdata.sort(function(pos1,pos2){return pos2[0] - pos1[0]});
+		for(let i=0; i < newdata.length; i++){
+			if (newdata[i][0] == "2022"){
+				count22 = count22 + 1;
+			} else if (newdata[i][0] == "2021"){
+			 	count21 = count21 + 1;
+			} else if (newdata[i][0] == "2020"){
+			 	count20 = count20 + 1;
+			}else if (newdata[i][0] == "2019"){
+			 	count19 = count19 + 1;
+			} else {
+				count18 = count18 + 1;
+			}
+		}
+		let total = count22 + count21 + count20 + count19 + count18;
+		console.log(count22,count21,count20,count19,count18,total);
+    	plotTheChart3(count22,count21,count20,count19,count18,total,newdata);
+	});
+}
+
+function plotTheChart3(count22,count21,count20,count19,count18,total,newdata){
+	let count22perc = 100 * count22 / total;
+	let count22label = count22perc.toFixed(2) + "%";
+	let count21perc = 100 * count21 / total;
+	let count21label = count21perc.toFixed(2) + "%";
+	let count20perc = 100 * count20 / total;
+	let count20label = count20perc.toFixed(2) + "%";
+	let count19perc = 100 * count19 / total;
+	let count19label = count19perc.toFixed(2) + "%";
+	let count18perc = 100 * count18 / total;
+	let count18label = count18perc.toFixed(2) + "%";
+	let imageurl = "https://image-charts.com/chart?cht=p3&";
+	imageurl = imageurl + "chs=600x600&";
+	imageurl = imageurl + "chd=t:" + count18 + "," + count19 + "," + count20 + "," + count21 + "," + count22 + "&";
+	imageurl = imageurl + "chdl=" + 2018 + " - " + count18label + "|" +  2019 + " - " + count19label + "|" +  2020 + " - " + count20label + "|" +  2021 + " - " + count21label + "|" +  2022 + " - " + count22label + "&";
+	imageurl = imageurl + "chlps=font.size,25";
+	console.log(imageurl);
+	$("#output3").html("<img src='" + imageurl + "'>"); 
+}
+
+$('#btn_1').click(function(){
+	police_districts();
+	chart1();
+})
+
+$('#btn_2').click(function(){
+	police_districts();
+	chart2();
+})
+
+$('#btn_3').click(function(){
+	police_districts();
+	chart3();
+})
+
+</script>
+</html>
